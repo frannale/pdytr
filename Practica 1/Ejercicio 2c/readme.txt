@@ -1,0 +1,1 @@
+La forma de ejecución y compilación de estos códigos es exactamente igual a serverCheck.c y clientCheck.c. Solo que los resultados serán diferentes, en este experimento se muestra como todos los datos son recibidos y ademas que la integridad de los mismos es correcta por medio del calcula de checksum, explicado en el informe.
