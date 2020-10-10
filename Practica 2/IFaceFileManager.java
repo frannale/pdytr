@@ -7,8 +7,8 @@ public interface IFaceFileManager extends Remote
 {
 
 
-public byte[] readFile(String name, int offset, int amountToRead) throws RemoteException;
+public byte[] readFile(String filename, int offset, int amountToRead) throws RemoteException;
 
-public void writeFile(String name, byte[] data, int amountToWrite) throws RemoteException;
+public void writeFile(String filename, byte[] data, int amountToWrite) throws RemoteException;
 
 }
