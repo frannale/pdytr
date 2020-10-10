@@ -18,8 +18,8 @@ try {
     IFaceFileManager remote = (IFaceFileManager) Naming.lookup(rname);
     int bufferlength = 100;
 
-    /* Nombre del archivo */
-    String fileName = new String("20200724_175608.jpg");
+    /* Name of the file */
+    String fileName = new String("datos.txt");
     
     /*Buffer creation*/
     byte[] buffer = new byte[bufferlength];
@@ -27,16 +27,20 @@ try {
     /* Number of bytes acumulator */
     int bytesWritten = 0;
 
-    /*Abrir el archivo a esribir*/
+    /*Open the file that you wanna write in the server*/
     File file = new File(fileName);
     FileInputStream in = new FileInputStream(file);
     int bytesReaded = in.read(buffer);
 
+    /* The name that your file will have in the server */
+    String fileNameServer = new String("prueba.txt");
+
     while(bytesReaded != -1){
-        bytesWritten = remote.writeFile("prueba.jpg", buffer, bytesReaded);
+        bytesWritten = remote.writeFile(fileNameServer, buffer, bytesReaded);
+        /* In case the amout of data readed from the file dosen't qual bufferLength */
         while(bytesWritten != bytesReaded){
             bytesReaded -= bytesWritten;
-            bytesWritten = remote.writeFile("prueba.jpg", buffer, bytesReaded);
+            bytesWritten = remote.writeFile(fileNameServer, buffer, bytesReaded);
         }
         System.out.println(bytesWritten);
         bytesReaded = in.read(buffer);
