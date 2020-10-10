@@ -1,6 +1,8 @@
 /* The client connects with the server and uses the remote object. The length for reading and writing are fixed*/
 import java.rmi.Naming; /* lookup */
 import java.rmi.registry.Registry; /* REGISTRY_PORT */
+import java.io.*;
+
 public class AskRemote
 {
 public static void main(String[] args)
@@ -15,12 +17,33 @@ try {
     String rname = "//localhost:" + Registry.REGISTRY_PORT + "/remote";
     IFaceFileManager remote = (IFaceFileManager) Naming.lookup(rname);
     int bufferlength = 100;
+
+    /* Nombre del archivo */
+    String fileName = new String("20200724_175608.jpg");
+    
+    /*Buffer creation*/
     byte[] buffer = new byte[bufferlength];
-    for(int i=0; i < 100; i++){
-        buffer[i] = 'a';
+
+    /* Number of bytes acumulator */
+    int bytesWritten = 0;
+
+    /*Abrir el archivo a esribir*/
+    File file = new File(fileName);
+    FileInputStream in = new FileInputStream(file);
+    int bytesReaded = in.read(buffer);
+
+    while(bytesReaded != -1){
+        bytesWritten = remote.writeFile("prueba.jpg", buffer, bytesReaded);
+        while(bytesWritten != bytesReaded){
+            bytesReaded -= bytesWritten;
+            bytesWritten = remote.writeFile("prueba.jpg", buffer, bytesReaded);
+        }
+        System.out.println(bytesWritten);
+        bytesReaded = in.read(buffer);
+        bytesWritten = 0;
     }
-    remote.writeFile("prueba.txt", buffer, bufferlength/2);
-    System.out.println("Done");
+
+
 } catch (Exception e) {
     e.printStackTrace();
 }

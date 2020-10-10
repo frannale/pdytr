@@ -1,6 +1,5 @@
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.*;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
@@ -20,18 +19,29 @@ public byte[] readFile(String filename, int offset, int amountToRead) throws Rem
     return data;
 }
 
-public void writeFile(String filename, byte[] data, int amountToWrite) throws RemoteException
+public int writeFile(String filename, byte[] data, int amountToWrite) throws RemoteException
 {
     try{
         File file = new File(filename);
         file.createNewFile();
         FileOutputStream out = new FileOutputStream(file,true);
-        out.write(data, 0, amountToWrite);
+        DataOutputStream stream = new DataOutputStream(out);
+        stream.write(data, 0, amountToWrite);
+        int bytesWritten = 0;
+        bytesWritten = stream.size();
+
+        stream.flush();
+        stream.close();
         out.flush();
         out.close();
+        
         System.out.println("Done writing data...");
+        
+        return bytesWritten;
+    
     }catch(Exception e){
         e.printStackTrace();
+        return 0;
     }
 }
 
