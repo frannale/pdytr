@@ -3,29 +3,18 @@ import java.rmi.Naming; /* lookup */
 import java.rmi.registry.Registry; /* REGISTRY_PORT */
 import java.io.*;
 import java.io.File;
-import java.util.Scanner;
-
 
 // CLIENTE
 public class AskRemote{
 
     public static void main(String[] args){
         /* Look for hostname and msg length in the command line */
-        // if (args.length < 2){
-        //     System.out.println("1 arg = W/R 2 arg = filename");
-        //     System.exit(1);
-        // }
+        if (args.length > 1){
+            System.out.println("1 argument needed: file name");
+            System.exit(1);
+        }
 
         try {
-            
-            // USUARIO ELIJE ACCION
-            Scanner scanner = new Scanner(System.in);
-            System.out.println("Elija una opcion: \r\n 1 - Subir archivo \r\n 2 - Descargar archivo");
-            String action = scanner.nextLine();
-            // USUARIO ELIJE ACCION
-            System.out.println("Ingrese el nombre del archivo:");
-            scanner = new Scanner(System.in);
-            String filename = scanner.nextLine();
             // OBTIENE REFERENCIA A OBJETO REMOTO
             String rname = "//localhost:" + Registry.REGISTRY_PORT + "/remote";
             IFaceFileManager remote = (IFaceFileManager) Naming.lookup(rname);
@@ -33,13 +22,13 @@ public class AskRemote{
             
             AskRemote cliente = new AskRemote();
             // CLIENTE ELIJE ACCION
-            switch(action) {
-                case "1":
+            switch('R') {
+                case 'W':
                     // UPLOAD ARCHIVO
-                    cliente.writeFile(remote,filename);break;
-                case "2":
+                    cliente.writeFile(remote);break;
+                case 'R':
                     // DOWNLOAD ARCHIVO
-                    cliente.readFile(remote,filename);break;
+                    cliente.readFile(remote);break;
                 default:
                     break;
             }         
@@ -50,53 +39,39 @@ public class AskRemote{
     }
 
     // UPLOAD DE ARCHIVO LOCAL AL REMOTO
-    public static void writeFile(IFaceFileManager remote, String fileName){
+    public static void writeFile(IFaceFileManager remote){
 
         try {
 
-            /*Open the file that you wanna write in the server*/
-            File file = new File(fileName);
-            RandomAccessFile in = new RandomAccessFile(file, "r");
+            int bufferlength = 100;
 
-            /* Buffer creation */
-            int bufferLength = 100;
-            byte[] buffer = new byte[bufferLength];
+            /* Name of the file */
+            String fileName = new String("datos.txt");
+            
+            /*Buffer creation*/
+            byte[] buffer = new byte[bufferlength];
 
-            /* Number of bytes written in the server */
+            /* Number of bytes acumulator */
             int bytesWritten = 0;
 
-            /* Read the the first block of data to be send */
-            int bytesReaded = 0;
-            int actualBytesReaded = 0;
-            bytesReaded = in.read(buffer, 0, bufferLength);
+            /*Open the file that you wanna write in the server*/
+            File file = new File(fileName);
+            FileInputStream in = new FileInputStream(file);
+            int bytesReaded = in.read(buffer);
 
             /* The name that your file will have in the server */
-            String fileNameServer = new String("copia.jpg");
+            String fileNameServer = new String("prueba.txt");
 
-            /*Write unltil all the file is written*/
-            while(bytesWritten != in.length()){
-                /* Obtain the amount of data written in the server */
-                bytesWritten += remote.writeFile(fileNameServer, buffer, bufferLength/2);
-                /* In case the amout of data written from the file dosen't equal bytesReaded 
-                   in this iteration, write in the server until both are equal */
+            while(bytesReaded != -1){
+                bytesWritten = remote.writeFile(fileNameServer, buffer, bytesReaded);
+                /* In case the amout of data readed from the file dosen't qual bufferLength */
                 while(bytesWritten != bytesReaded){
-                    /* Because the read moves the offset of the file we have 
-                       to make it so that it point to the last amount written */
-                    in.seek(bytesWritten);
-                    /* Now we read from the file the differnece between the las amount 
-                       written and the amount of data readed for this iteration.
-
-                       This read could have been inside de next writeFile method 
-                       but for readeability reasons we used an additional variable*/
-                    actualBytesReaded = in.read(buffer, 0, bytesReaded - bytesWritten);
-                    /* Keep acumulating until bytesWritten equals bytesReaded */
-                    bytesWritten += remote.writeFile(fileNameServer, buffer, actualBytesReaded);
+                    bytesReaded -= bytesWritten;
+                    bytesWritten = remote.writeFile(fileNameServer, buffer, bytesReaded);
                 }
-                /* A simple progress showing of the data written in each iteration */
                 System.out.println(bytesWritten);
-
-                /* Read the next block of data to be send to the server */
-                bytesReaded += in.read(buffer, 0, bufferLength);
+                bytesReaded = in.read(buffer);
+                bytesWritten = 0;
             }
 
 
@@ -106,9 +81,12 @@ public class AskRemote{
     }
 
     // DESCARGA DE ARCHIVO REMOTO
-    public static void readFile(IFaceFileManager remote,String fileNameServer){
+    public static void readFile(IFaceFileManager remote){
 
         try {
+            
+            /* The name that your file will have in the server */
+            String fileNameServer = new String("descarga.txt");
 
             // CREACION DEL ARCHIVO DE FORMAL LOCAL
             File file = new File(fileNameServer);
