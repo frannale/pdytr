@@ -71,14 +71,17 @@ public class AskRemote{
             bytesReaded = in.read(buffer, 0, bufferLength);
 
             /* The name that your file will have in the server */
-            String fileNameServer = new String("copia.jpg");
+            String fileNameServer = new String("copia_server_" + fileName);
 
             /*Write unltil all the file is written*/
             while(bytesWritten != in.length()){
                 /* Obtain the amount of data written in the server */
-                bytesWritten += remote.writeFile(fileNameServer, buffer, bufferLength/2);
+                bytesWritten += remote.writeFile(fileNameServer, buffer, bytesReaded - bytesWritten);
                 /* In case the amout of data written from the file dosen't equal bytesReaded 
                    in this iteration, write in the server until both are equal */
+                
+                System.out.println(bytesWritten + " bytes escritos en esta iteracion");
+
                 while(bytesWritten != bytesReaded){
                     /* Because the read moves the offset of the file we have 
                        to make it so that it point to the last amount written */
@@ -93,10 +96,11 @@ public class AskRemote{
                     bytesWritten += remote.writeFile(fileNameServer, buffer, actualBytesReaded);
                 }
                 /* A simple progress showing of the data written in each iteration */
-                System.out.println(bytesWritten);
 
                 /* Read the next block of data to be send to the server */
                 bytesReaded += in.read(buffer, 0, bufferLength);
+
+                System.out.println(bytesReaded + " bytes leidos de " + in.length() + " bytes. Condicion: " + (bytesReaded == in.length()) + "\r\n");
             }
 
 
