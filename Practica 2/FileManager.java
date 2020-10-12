@@ -23,9 +23,6 @@ public class FileManager extends UnicastRemoteObject implements IFaceFileManager
             RandomAccessFile in = new RandomAccessFile(file, "r");
 
             // SE LEE CANTIDAD DESDE LA POSICION SOLICITADA
-
-            System.out.println("Puntero parametro: " + offset);
-
             in.seek(offset);
             int bytesLeidos = in.read(buffer,0,bytesSolicitados);
 

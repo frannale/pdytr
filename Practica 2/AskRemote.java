@@ -79,8 +79,6 @@ public class AskRemote{
                 bytesWritten += remote.writeFile(fileNameServer, buffer, bytesReaded - bytesWritten);
                 /* In case the amout of data written from the file dosen't equal bytesReaded 
                    in this iteration, write in the server until both are equal */
-                
-                System.out.println(bytesWritten + " bytes escritos en esta iteracion");
 
                 while(bytesWritten != bytesReaded){
                     /* Because the read moves the offset of the file we have 
@@ -100,7 +98,7 @@ public class AskRemote{
                 /* Read the next block of data to be send to the server */
                 bytesReaded += in.read(buffer, 0, bufferLength);
 
-                System.out.println(bytesReaded + " bytes leidos de " + in.length() + " bytes. Condicion: " + (bytesReaded == in.length()) + "\r\n");
+                System.out.println(bytesWritten + " bytes escritos de " + in.length() + " bytes \r\n");
             }
 
 
@@ -144,14 +142,14 @@ public class AskRemote{
                 }
 
                 buffer = bufferControlado.getBuffer();
-                
-                System.out.println(bytesLeidosLast + " bytes leidos en esta iteracion");
 
                 // ESCRIBE LOCAL EL BUFFER QUE RECIBIO
                 stream.write(buffer, 0, bytesLeidosLast);
 
                 // ACTUALIZO BYTES LEIDOS
                 bytesLeidosTotal += bytesLeidosLast;
+
+                System.out.println(bytesLeidosTotal + " bytes leidos totales");
             }
             
             // CIERRA CONEXIONES CON LOS ARCHIVOS
