@@ -135,18 +135,23 @@ public class AskRemote{
 
                 // INVOCA EL METODO REMOTO, INDICANDO ARCHIVO, POSICION EN EL MISMO Y CANTIDAD DE BYTES A LEER
                 BufferControlado bufferControlado = remote.readFile(fileNameServer, bytesLeidosTotal, bufferlength);
+
                 bytesLeidosLast = bufferControlado.getCantidad();
-                buffer = bufferControlado.getBuffer();
-                // ESCRIBE LOCAL EL BUFFER QUE RECIBIO
-                stream.write(buffer, bytesLeidosTotal, bytesLeidosLast);
-                // ACTUALIZO BYTES LEIDOS
-                bytesLeidosTotal = stream.size();
 
                 // SI LA CANTIDAD RECIBIDA ES MENOR QUE LA SOLICITADA ES EL FINAL DEL ARCHIVO
-                if(bytesLeidosLast != bufferlength ){
+                if(bytesLeidosLast == -1){
                     break;
                 }
 
+                buffer = bufferControlado.getBuffer();
+                
+                System.out.println(bytesLeidosLast + " bytes leidos en esta iteracion");
+
+                // ESCRIBE LOCAL EL BUFFER QUE RECIBIO
+                stream.write(buffer, 0, bytesLeidosLast);
+
+                // ACTUALIZO BYTES LEIDOS
+                bytesLeidosTotal += bytesLeidosLast;
             }
             
             // CIERRA CONEXIONES CON LOS ARCHIVOS

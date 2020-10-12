@@ -20,13 +20,20 @@ public class FileManager extends UnicastRemoteObject implements IFaceFileManager
 
             // SE ABRE EL ARCHIVO QUE SE SOLICITO DESCARGAR
             File file = new File(filename);
-            FileInputStream in = new FileInputStream(file);
+            RandomAccessFile in = new RandomAccessFile(file, "r");
+
             // SE LEE CANTIDAD DESDE LA POSICION SOLICITADA
-            int bytesLeidos = in.read(buffer,offset,bytesSolicitados);
+
+            System.out.println("Puntero parametro: " + offset);
+
+            in.seek(offset);
+            int bytesLeidos = in.read(buffer,0,bytesSolicitados);
 
             System.out.println("Data back to client");
+
             // RETORNA UNA PAR, CANTIDAD DE BYTES LEIDOS Y EL BUFFER 
             return new BufferControlado(bytesLeidos, buffer);
+
         }catch(Exception e){
             e.printStackTrace();
             return new BufferControlado(-1, null);
