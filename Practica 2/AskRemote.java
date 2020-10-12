@@ -20,7 +20,7 @@ public class AskRemote{
             
             // USUARIO ELIJE ACCION
             Scanner scanner = new Scanner(System.in);
-            System.out.println("Elija una opcion: \r\n 1 - Subir archivo \r\n 2 - Descargar archivo");
+            System.out.println("Elija una opcion: \r\n 1 - Subir archivo \r\n 2 - Descargar archivo \r\n 3 - Descargar verificado");
             String action = scanner.nextLine();
             // USUARIO ELIJE ACCION
             System.out.println("Ingrese el nombre del archivo:");
@@ -40,6 +40,11 @@ public class AskRemote{
                 case "2":
                     // DOWNLOAD ARCHIVO
                     cliente.readFile(remote,filename);break;
+                case "3":
+                    // DOWNLOAD ARCHIVO CON VERIFICACION
+                    cliente.readFile(remote,filename);
+                    cliente.writeFile(remote, "copia_" +filename);
+                    break;
                 default:
                     break;
             }         
@@ -98,8 +103,8 @@ public class AskRemote{
                 /* Read the next block of data to be send to the server */
                 bytesReaded += in.read(buffer, 0, bufferLength);
 
-                System.out.println(bytesWritten + " bytes escritos de " + in.length() + " bytes \r\n");
             }
+            System.out.println("Archivo cargado exitosamente! " + bytesWritten + " bytes escritos.");
 
 
         } catch (Exception e) {
@@ -148,10 +153,10 @@ public class AskRemote{
 
                 // ACTUALIZO BYTES LEIDOS
                 bytesLeidosTotal += bytesLeidosLast;
-
-                System.out.println(bytesLeidosTotal + " bytes leidos totales");
+                
             }
-            
+
+            System.out.println("Archivo descargado exitosamente! " + bytesLeidosTotal + " bytes leidos totales.");
             // CIERRA CONEXIONES CON LOS ARCHIVOS
             stream.flush();
             stream.close();

@@ -26,8 +26,6 @@ public class FileManager extends UnicastRemoteObject implements IFaceFileManager
             in.seek(offset);
             int bytesLeidos = in.read(buffer,0,bytesSolicitados);
 
-            System.out.println("Data back to client");
-
             // RETORNA UNA PAR, CANTIDAD DE BYTES LEIDOS Y EL BUFFER 
             return new BufferControlado(bytesLeidos, buffer);
 
@@ -52,8 +50,6 @@ public class FileManager extends UnicastRemoteObject implements IFaceFileManager
             stream.close();
             out.flush();
             out.close();
-            
-            System.out.println("Done writing data...");
             
             return bytesWritten;
         
