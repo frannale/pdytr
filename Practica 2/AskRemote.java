@@ -111,7 +111,7 @@ public class AskRemote{
         try {
 
             // CREACION DEL ARCHIVO DE FORMAL LOCAL
-            File file = new File(fileNameServer);
+            File file = new File("copia_" + fileNameServer);
             file.createNewFile();
             FileOutputStream out = new FileOutputStream(file,true);
             DataOutputStream stream = new DataOutputStream(out);
@@ -130,7 +130,7 @@ public class AskRemote{
             while(true){
 
                 // INVOCA EL METODO REMOTO, INDICANDO ARCHIVO, POSICION EN EL MISMO Y CANTIDAD DE BYTES A LEER
-                BufferControlado bufferControlado = remote.readFile("datos.txt", bytesLeidosTotal, bufferlength);
+                BufferControlado bufferControlado = remote.readFile(fileNameServer, bytesLeidosTotal, bufferlength);
                 bytesLeidosLast = bufferControlado.getCantidad();
                 buffer = bufferControlado.getBuffer();
                 // ESCRIBE LOCAL EL BUFFER QUE RECIBIO
