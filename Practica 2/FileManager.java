@@ -25,8 +25,10 @@ public class FileManager extends UnicastRemoteObject implements IFaceFileManager
             // SE LEE CANTIDAD DESDE LA POSICION SOLICITADA
             in.seek(offset);
             int bytesLeidos = in.read(buffer,0,bytesSolicitados);
-
+            in.close();
             // RETORNA UNA PAR, CANTIDAD DE BYTES LEIDOS Y EL BUFFER 
+            
+
             return new BufferControlado(bytesLeidos, buffer);
 
         }catch(Exception e){
