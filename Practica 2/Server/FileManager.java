@@ -37,11 +37,18 @@ public class FileManager extends UnicastRemoteObject implements IFaceFileManager
         }
     }
 
-    public int writeFile(String filename, byte[] data, int amountToWrite) throws RemoteException{
+    public int writeFile(String filename, byte[] data, int amountToWrite,boolean firstTime) throws RemoteException{
         
         try{
             File file = new File(filename);
             file.createNewFile();
+            // SI EXISTE EL ARCHIVO Y ES PRIMERA VEZ SE TRUNCA
+            if(firstTime){
+                PrintWriter writer = new PrintWriter(file);
+                writer.print("");
+                writer.close();
+            }
+            
             FileOutputStream out = new FileOutputStream(file,true);
             DataOutputStream stream = new DataOutputStream(out);
             stream.write(data, 0, amountToWrite);

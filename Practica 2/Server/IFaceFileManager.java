@@ -10,6 +10,6 @@ public interface IFaceFileManager extends Remote
 
 public BufferControlado readFile(String filename, int offset, int amountToRead) throws RemoteException;
 
-public int writeFile(String filename, byte[] data, int amountToWrite) throws RemoteException;
+public int writeFile(String filename, byte[] data, int amountToWrite,boolean firsTime) throws RemoteException;
 
 }

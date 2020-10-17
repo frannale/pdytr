@@ -81,7 +81,7 @@ public class AskRemote{
             /*Write unltil all the file is written*/
             while(bytesWritten != in.length()){
                 /* Obtain the amount of data written in the server */
-                bytesWritten += remote.writeFile(fileNameServer, buffer, bytesReaded - bytesWritten);
+                bytesWritten += remote.writeFile(fileNameServer, buffer, bytesReaded - bytesWritten,((bytesWritten == 0) ? true : false));
                 /* In case the amout of data written from the file dosen't equal bytesReaded 
                    in this iteration, write in the server until both are equal */
 
@@ -96,7 +96,7 @@ public class AskRemote{
                        but for readeability reasons we used an additional variable*/
                     actualBytesReaded = in.read(buffer, 0, bytesReaded - bytesWritten);
                     /* Keep acumulating until bytesWritten equals bytesReaded */
-                    bytesWritten += remote.writeFile(fileNameServer, buffer, actualBytesReaded);
+                    bytesWritten += remote.writeFile(fileNameServer, buffer, actualBytesReaded,((bytesWritten == 0) ? true : false));
                 }
                 /* A simple progress showing of the data written in each iteration */
 
@@ -120,7 +120,11 @@ public class AskRemote{
             // CREACION DEL ARCHIVO DE FORMAL LOCAL
             File file = new File("copia_" + fileNameServer);
             file.createNewFile();
-            FileOutputStream out = new FileOutputStream(file,true);
+            // SI EXISTE EL ARCHIVO Y ES PRIMERA VEZ SE TRUNCA
+            PrintWriter writer = new PrintWriter(file);
+            writer.print("");
+            writer.close();
+            FileOutputStream out = new FileOutputStream(file,false);
             DataOutputStream stream = new DataOutputStream(out);
 
             // TAMANIO BUFFER Y SOLICITUD
