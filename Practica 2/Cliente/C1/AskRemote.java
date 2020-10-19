@@ -18,19 +18,28 @@ public class AskRemote{
 
         try {
             
+            System.out.println(args.length);
             // USUARIO ELIJE ACCION
-            Scanner scanner = new Scanner(System.in);
-            System.out.println("Elija una opcion: \r\n 1 - Subir archivo \r\n 2 - Descargar archivo \r\n 3 - Descargar verificado");
-            String action = scanner.nextLine();
-            // USUARIO ELIJE ACCION
-            System.out.println("Ingrese el nombre del archivo:");
-            scanner = new Scanner(System.in);
-            String filename = scanner.nextLine();
+            String action;
+            String filename;
+            if (args.length == 2){
+                action = args[0];
+                filename = args[1];
+            }
+            else{
+                Scanner scanner = new Scanner(System.in);
+                System.out.println("Elija una opcion: \r\n 1 - Subir archivo \r\n 2 - Descargar archivo \r\n 3 - Descargar verificado");
+                action = scanner.nextLine();
+                // USUARIO ELIJE ACCION
+                System.out.println("Ingrese el nombre del archivo:");
+                scanner = new Scanner(System.in);
+                filename = scanner.nextLine();
+            }
+            
             // OBTIENE REFERENCIA A OBJETO REMOTO
             String rname = "//localhost:" + Registry.REGISTRY_PORT + "/remote";
             IFaceFileManager remote = (IFaceFileManager) Naming.lookup(rname);
 
-            
             AskRemote cliente = new AskRemote();
             // CLIENTE ELIJE ACCION
             switch(action) {
