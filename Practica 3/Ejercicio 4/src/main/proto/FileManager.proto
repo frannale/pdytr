@@ -1,0 +1,27 @@
+syntax = "proto3";
+package pdytr.example.grpc;
+
+// Request payload
+message File {
+  
+  //Nombre del archivo a escribir
+  string fileNameServer = 1;
+
+  // Buffer
+  bytes data = 2;
+
+  //Cantidad de datos a escribir
+  int32 amountToWrite = 3;
+
+}
+
+message Response {
+  int32 bytesWritten = 1;
+}
+
+// Defining a Service, a Service can have multiple RPC operations
+service FileManager {
+   //Servicio para escribir en el server 
+   rpc writeFile(File) returns (Response);
+}
+
