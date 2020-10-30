@@ -15,32 +15,34 @@ public class Client
       // It is up to the client to determine whether to block the call
       // Here we create a blocking stub, but an async stub,
       // or an async stub with Future are always possible.
-      GreetingServiceGrpc.GreetingServiceBlockingStub stub = GreetingServiceGrpc.newBlockingStub(channel).withDeadlineAfter(400, TimeUnit.MILLISECONDS);
-
-      /* Take the time before the comunication */
-      long intialTime = System.nanoTime();
+      GreetingServiceGrpc.GreetingServiceBlockingStub stub = GreetingServiceGrpc.newBlockingStub(channel).withDeadlineAfter(324199895, TimeUnit.NANOSECONDS);
       
       GreetingServiceOuterClass.HelloRequest request =
         GreetingServiceOuterClass.HelloRequest.newBuilder()
           .setName("Ray")
           .build();
 
-      /* Take the time after the comunication */
-      long finalTime = System.nanoTime();
+      long intialTime;
+      long finalTime;
+      long aproximatedTime;
 
-      /* The aproximated time of each individual comunication */
-      long aproximatedTime = (finalTime - intialTime);
+      /* Take the time before the comunication */
+      intialTime = System.nanoTime(); 
 
       // Finally, make the call using the stub
       GreetingServiceOuterClass.HelloResponse response = 
         stub.greeting(request);
-       
-      //System.out.println(response);
+
+      /* Take the time after the comunication */
+      finalTime = System.nanoTime();
+
+      /* The aproximated time of each individual comunication */
+      aproximatedTime = (finalTime - intialTime);
+
+      //Print comunicaction time
+      System.out.println(aproximatedTime);
 
       // A Channel should be shutdown before stopping the process.
       channel.shutdownNow();
-
-      Thread.sleep(2000);
-      System.out.println(aproximatedTime); 
     }
 }
