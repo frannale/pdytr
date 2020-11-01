@@ -21,7 +21,9 @@ public class Client
       // or an async stub with Future are always possible.
       FileManagerGrpc.FileManagerBlockingStub stub = FileManagerGrpc.newBlockingStub(channel);
 
-      File file = new File("img.jpg");
+      String filename =  "prueba.deb";
+      
+      File file = new File(filename);
       RandomAccessFile in = new RandomAccessFile(file, "r");
 
       /* Buffer creation */
@@ -42,7 +44,7 @@ public class Client
       bytesReaded = in.read(buffer, 0, bufferLength);
 
       /* The name that your file will have in the server */
-      String fileNameServer = new String("copia_server_" + "img.jpg");
+      String fileNameServer = new String("copia_server_" + filename);
 
       /*Write unltil all the file is written*/
       while(bytesWritten != in.length()){

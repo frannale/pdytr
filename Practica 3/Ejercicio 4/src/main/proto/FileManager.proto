@@ -1,7 +1,7 @@
 syntax = "proto3";
 package pdytr.example.grpc;
 
-// Request payload
+// Request de carga
 message File {
   
   //Nombre del archivo a escribir
@@ -19,9 +19,31 @@ message Response {
   int32 bytesWritten = 1;
 }
 
-// Defining a Service, a Service can have multiple RPC operations
+// Request de descarga
+message DownloadFile {
+  
+  //Nombre del archivo a escribir
+  string fileNameServer = 1;
+
+  //Offset de lectura
+  int32 offset = 2;
+
+  //Cantidad de datos a escribir
+  int32 amountToRead = 3;
+
+}
+
+message DownloadResponse {
+  int32 bytesReaded = 1;
+  // Buffer
+  bytes data = 2;
+}
+
+// Definicion de servicio con operaciones de carga y descarga
 service FileManager {
    //Servicio para escribir en el server 
    rpc writeFile(File) returns (Response);
+   //Servicio para descargar del server 
+   rpc readFile(DownloadFile) returns (DownloadResponse);
 }
 

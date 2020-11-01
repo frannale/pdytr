@@ -1,0 +1,1 @@
+mvn compile exec:java -Dexec.mainClass="pdytr.example.grpc.Client" -Dexec.args=$1

@@ -3,8 +3,47 @@ package pdytr.example.grpc;
 import io.grpc.stub.StreamObserver;
 import java.io.File;
 import java.io.*;
+import com.google.protobuf.ByteString;
 
 public class FileManagerImpl extends FileManagerGrpc.FileManagerImplBase {
+
+  @Override
+  public void readFile(FileManagerOuterClass.DownloadFile request,
+                       StreamObserver<FileManagerOuterClass.DownloadResponse> responseObserver){
+
+    try{
+      //ABRE EL ARCHIVO
+      File file = new File(request.getFileNameServer());
+      RandomAccessFile in = new RandomAccessFile(file, "r");
+
+      //CREA BUFFER
+      int bufferLength = request.getAmountToRead();
+      byte[] buffer = new byte[bufferLength];
+      ByteString bufferString = ByteString.EMPTY;
+
+      // LEE EL ARCHIVO
+      in.seek(request.getOffset());
+      int bytesReaded = in.read(buffer, 0, bufferLength);
+      in.close();
+      bufferString = bufferString.copyFrom(buffer);
+
+      // ARMA EL RESPONSE
+      FileManagerOuterClass.DownloadResponse response = FileManagerOuterClass.DownloadResponse.newBuilder()
+      .setBytesReaded(bytesReaded)
+      .setData(bufferString)
+      .build();
+
+      // RESPONDE REQUEST
+      responseObserver.onNext(response); 
+
+      // FINALIZA EJECUCION
+      responseObserver.onCompleted();
+
+    }catch(Exception e){
+      e.printStackTrace();
+    }
+  }
+
   @Override
   public void writeFile(FileManagerOuterClass.File request,
         StreamObserver<FileManagerOuterClass.Response> responseObserver) {
