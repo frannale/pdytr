@@ -25,7 +25,7 @@ public class AgenteMovilDescarga extends Agent
 	{		
 		try {
 
-			// OBTENER LA OPERACIÓN A REALIZAR
+			// OBTENER LA OPERACION A REALIZAR
 			Object[] args = getArguments();
 			String operation = args[0].toString();
 
@@ -40,8 +40,7 @@ public class AgenteMovilDescarga extends Agent
 				//NOMBRE DEL ARCHIVO COPIA
 				file = new File("copia_server_" + filename);
 
-				origen_container = new ContainerID("Main-Container", null);
-				destino_container = new ContainerID(origen, null);
+				switchOrigenDestino("Main-Container", origen);
 				
 				// SE EJECUTA EL AFTERMOVE() PARA SIMULAR QUE SE MOVIO DE
 				// MAIN-CONTAINER A CONTAINER-1
@@ -56,10 +55,7 @@ public class AgenteMovilDescarga extends Agent
 				//NOMBRE DEL ARCHIVO COPIA
 				file = new File("copia_" + filename);
 				
-				// CREA CONTENEDORES
-				System.out.println("Setup finalizado\n\n");
-				origen_container = new ContainerID(origen, null);
-				destino_container = new ContainerID("Main-Container", null);
+				switchOrigenDestino(origen,"Main-Container");
 				
 				// SE MUEVE AL CONTAINER QUE POSEE EL ARCHIVO
 				doMove(destino_container);
@@ -71,9 +67,16 @@ public class AgenteMovilDescarga extends Agent
 		}
 	}
 
-	// AL MOVERSE DE CONTAINER
-	protected void afterMove()
-	{
+	// SETEA CONTAINER DE ORIGEN Y DESTINO, EN ORIGEN ES DONDE QUEDA LA COPIA
+	public void switchOrigenDestino(String origen, String destino){
+		
+		origen_container = new ContainerID(origen, null);
+		destino_container = new ContainerID(destino, null);
+	}
+
+	// LOGICA DE COPIA DEL ARCHIVO
+	public void copyFile(){
+
 		String now = here().getID().split("@", 0)[0];
 
 		try{
@@ -100,8 +103,7 @@ public class AgenteMovilDescarga extends Agent
 				bytesTotalesLeidos += bytesActualesLeidos;
 				offset = bytesTotalesLeidos;
 
-				// CREA ARCHIVO
-				//EN CASO DE QUE YA EXISTA NO HACE NADA
+				// CREA ARCHIVO, EN CASO DE QUE YA EXISTA NO HACE NADA
 				if(file.createNewFile()){
 					System.out.println("Archivo creado con nombre: " + file.getName());
 				}
@@ -109,40 +111,48 @@ public class AgenteMovilDescarga extends Agent
 				//ESCRIBE EL ARCHIVO
 				FileOutputStream out = new FileOutputStream(file,true);
 				DataOutputStream stream = new DataOutputStream(out);
-                stream.write(buffer, 0, bytesActualesLeidos);
-                stream.flush();
-                out.flush();
+				stream.write(buffer, 0, bytesActualesLeidos);
+				stream.flush();
+				out.flush();
 
-                // SI LOS LEIDOS ES MENOR A EL MAXIMO ES QUE TERMINO
+				// SI LOS LEIDOS ES MENOR A EL MAXIMO ES QUE TERMINO
 				if(bytesActualesLeidos == bufferLength){
-					doMove(destino_container);
-				}else{
-					System.out.println("Archivo descargado exitosamente! " + bytesTotalesLeidos + " bytes leidos.");
-
-					if(loadAndDownload){
-						System.out.println("Realizando copia en el server");
-
-						// RESETEAMOS LOS ACUMULADORES PARA REALIZAR LA NUEVA LECTURA
-						offset = 0;
-						bytesTotalesLeidos = 0;
-
-						// NOMBRE DEL ARCHIVO COPIA
-						file = new File("copia_server_" + filename);
-
-						origen_container = new ContainerID("Main-Container", null);
-						destino_container = new ContainerID(origen, null);
-
-						// SI NO SE VUELVE FALSA SE GENERA UN LOOP
-						loadAndDownload = false;
-						
-						// SE EJECUTA EL AFTERMOVE() PARA SIMULAR QUE SE MOVIO DE
-						// MAIN-CONTAINER A CONTAINER-1
-						afterMove();
-					}
-				} 	
-
+					doMove(origen_container);
+				}
 			}
+			System.out.println("Archivo copiado exitosamente! " + bytesTotalesLeidos + " bytes leidos.");
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 		
+	}
+	// AL MOVERSE DE CONTAINER
+	protected void afterMove()
+	{
+
+		try{
+				// EJECUTA LOGICA PARA COPIAR EL ARCHIVO
+				copyFile();
+
+				if(loadAndDownload){
+					System.out.println("Realizando copia de verificacion");
+
+					// RESETEAMOS LOS ACUMULADORES PARA REALIZAR LA NUEVA LECTURA
+					offset = 0;
+					bytesTotalesLeidos = 0;
+
+					// NOMBRE DEL ARCHIVO COPIA
+					file = new File("copia_server_" + filename);
+
+					switchOrigenDestino("Main-Container", origen);
+
+					// SI NO SE VUELVE FALSA SE GENERA UN LOOP
+					loadAndDownload = false;
+						
+					// SIMULAR QUE SE MOVIO DE MAIN-CONTAINER A CONTAINER-1
+					afterMove();
+				}	
+
 		}catch(Exception e){
 			e.printStackTrace();
 		}
