@@ -1,0 +1,19 @@
+syntax = "proto3";
+package pdytr.example.grpc;
+
+message RegistroRequest {
+
+  string facultad = 1;
+  string aula = 2;
+  string nombre = 3;
+
+}
+
+message RegistroResponse {
+  int32 cantidad_registrada = 1;
+}
+
+service RegistroService {
+   rpc registro(RegistroRequest) returns (RegistroResponse);
+}
+
