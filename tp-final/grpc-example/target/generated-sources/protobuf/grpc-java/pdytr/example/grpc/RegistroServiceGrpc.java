@@ -40,6 +40,19 @@ public final class RegistroServiceGrpc {
               pdytr.example.grpc.RegistroServiceOuterClass.RegistroResponse.getDefaultInstance()))
           .setSchemaDescriptor(new RegistroServiceMethodDescriptorSupplier("registro"))
           .build();
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
+  public static final io.grpc.MethodDescriptor<pdytr.example.grpc.RegistroServiceOuterClass.RegistroRequest,
+      pdytr.example.grpc.RegistroServiceOuterClass.RegistroResponse> METHOD_REGISTRO_STREAMING =
+      io.grpc.MethodDescriptor.<pdytr.example.grpc.RegistroServiceOuterClass.RegistroRequest, pdytr.example.grpc.RegistroServiceOuterClass.RegistroResponse>newBuilder()
+          .setType(io.grpc.MethodDescriptor.MethodType.CLIENT_STREAMING)
+          .setFullMethodName(generateFullMethodName(
+              "pdytr.example.grpc.RegistroService", "registroStreaming"))
+          .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              pdytr.example.grpc.RegistroServiceOuterClass.RegistroRequest.getDefaultInstance()))
+          .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              pdytr.example.grpc.RegistroServiceOuterClass.RegistroResponse.getDefaultInstance()))
+          .setSchemaDescriptor(new RegistroServiceMethodDescriptorSupplier("registroStreaming"))
+          .build();
 
   /**
    * Creates a new async stub that supports all call types for the service
@@ -75,6 +88,13 @@ public final class RegistroServiceGrpc {
       asyncUnimplementedUnaryCall(METHOD_REGISTRO, responseObserver);
     }
 
+    /**
+     */
+    public io.grpc.stub.StreamObserver<pdytr.example.grpc.RegistroServiceOuterClass.RegistroRequest> registroStreaming(
+        io.grpc.stub.StreamObserver<pdytr.example.grpc.RegistroServiceOuterClass.RegistroResponse> responseObserver) {
+      return asyncUnimplementedStreamingCall(METHOD_REGISTRO_STREAMING, responseObserver);
+    }
+
     @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
@@ -84,6 +104,13 @@ public final class RegistroServiceGrpc {
                 pdytr.example.grpc.RegistroServiceOuterClass.RegistroRequest,
                 pdytr.example.grpc.RegistroServiceOuterClass.RegistroResponse>(
                   this, METHODID_REGISTRO)))
+          .addMethod(
+            METHOD_REGISTRO_STREAMING,
+            asyncClientStreamingCall(
+              new MethodHandlers<
+                pdytr.example.grpc.RegistroServiceOuterClass.RegistroRequest,
+                pdytr.example.grpc.RegistroServiceOuterClass.RegistroResponse>(
+                  this, METHODID_REGISTRO_STREAMING)))
           .build();
     }
   }
@@ -112,6 +139,14 @@ public final class RegistroServiceGrpc {
         io.grpc.stub.StreamObserver<pdytr.example.grpc.RegistroServiceOuterClass.RegistroResponse> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(METHOD_REGISTRO, getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
+    public io.grpc.stub.StreamObserver<pdytr.example.grpc.RegistroServiceOuterClass.RegistroRequest> registroStreaming(
+        io.grpc.stub.StreamObserver<pdytr.example.grpc.RegistroServiceOuterClass.RegistroResponse> responseObserver) {
+      return asyncClientStreamingCall(
+          getChannel().newCall(METHOD_REGISTRO_STREAMING, getCallOptions()), responseObserver);
     }
   }
 
@@ -169,6 +204,7 @@ public final class RegistroServiceGrpc {
   }
 
   private static final int METHODID_REGISTRO = 0;
+  private static final int METHODID_REGISTRO_STREAMING = 1;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -201,6 +237,9 @@ public final class RegistroServiceGrpc {
     public io.grpc.stub.StreamObserver<Req> invoke(
         io.grpc.stub.StreamObserver<Resp> responseObserver) {
       switch (methodId) {
+        case METHODID_REGISTRO_STREAMING:
+          return (io.grpc.stub.StreamObserver<Req>) serviceImpl.registroStreaming(
+              (io.grpc.stub.StreamObserver<pdytr.example.grpc.RegistroServiceOuterClass.RegistroResponse>) responseObserver);
         default:
           throw new AssertionError();
       }
@@ -253,6 +292,7 @@ public final class RegistroServiceGrpc {
           serviceDescriptor = result = io.grpc.ServiceDescriptor.newBuilder(SERVICE_NAME)
               .setSchemaDescriptor(new RegistroServiceFileDescriptorSupplier())
               .addMethod(METHOD_REGISTRO)
+              .addMethod(METHOD_REGISTRO_STREAMING)
               .build();
         }
       }

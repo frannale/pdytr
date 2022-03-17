@@ -1281,9 +1281,12 @@ public final class RegistroServiceOuterClass {
       "rpc\"A\n\017RegistroRequest\022\020\n\010facultad\030\001 \001(\t" +
       "\022\014\n\004aula\030\002 \001(\t\022\016\n\006nombre\030\003 \001(\t\"/\n\020Regist" +
       "roResponse\022\033\n\023cantidad_registrada\030\001 \001(\0052" +
-      "h\n\017RegistroService\022U\n\010registro\022#.pdytr.e" +
-      "xample.grpc.RegistroRequest\032$.pdytr.exam" +
-      "ple.grpc.RegistroResponseb\006proto3"
+      "\312\001\n\017RegistroService\022U\n\010registro\022#.pdytr." +
+      "example.grpc.RegistroRequest\032$.pdytr.exa" +
+      "mple.grpc.RegistroResponse\022`\n\021registroSt" +
+      "reaming\022#.pdytr.example.grpc.RegistroReq" +
+      "uest\032$.pdytr.example.grpc.RegistroRespon" +
+      "se(\001b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {

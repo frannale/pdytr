@@ -2,4 +2,5 @@
 /home/fran/pdytr/tp-final/grpc-example/target/generated-sources/protobuf/java/pdytr/example/grpc/RegistroServiceOuterClass.java
 /home/fran/pdytr/tp-final/grpc-example/src/main/java/pdytr/example/grpc/App.java
 /home/fran/pdytr/tp-final/grpc-example/src/main/java/pdytr/example/grpc/ClienteAula.java
+/home/fran/pdytr/tp-final/grpc-example/src/main/java/pdytr/example/grpc/ClienteAulaStreaming.java
 /home/fran/pdytr/tp-final/grpc-example/src/main/java/pdytr/example/grpc/RegistroServiceImpl.java
