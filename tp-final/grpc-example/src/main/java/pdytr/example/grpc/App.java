@@ -1,8 +1,10 @@
 package pdytr.example.grpc;
 import io.grpc.*;
 
+@SuppressWarnings("unchecked")
 public class App
 {
+
     public static void main( String[] args ) throws Exception
     {
       // Crea servidor en el puerto 8080

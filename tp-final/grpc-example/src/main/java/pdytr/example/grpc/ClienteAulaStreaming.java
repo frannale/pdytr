@@ -14,18 +14,18 @@ public class ClienteAulaStreaming
     public static void main( String[] args ) throws Exception
     {
 
+        // Clase para manejar el llamado asincronico 
+        final CountDownLatch doneSignal = new CountDownLatch(1);
+
         // Channel es la abstraccion para connectarse al endpoint del servidor
         final ManagedChannel channel = ManagedChannelBuilder
             .forTarget("localhost:8080")
             .usePlaintext(true)
             .build();
 
-        // Se crea un stub bloqueante asociado el Channel creado
+        // Se crea un stub no bloqueante asociado el Channel creado
         RegistroServiceGrpc.RegistroServiceStub stub = RegistroServiceGrpc
             .newStub(channel);
-
-        // Clase para manejar el llamado asincronico 
-        final CountDownLatch doneSignal = new CountDownLatch(1);
 
         // Definimos una clase anonima para la comunicacion
         StreamObserver<RegistroServiceOuterClass.RegistroResponse> responseObserver =
@@ -43,7 +43,6 @@ public class ClienteAulaStreaming
                 }
                 @Override
                 public void onCompleted() {
-
                     // Se da por finalizada la comunicacion con el servidor 
                     System.out.println("Comunicacion finalizada");
                     doneSignal.countDown();
@@ -65,7 +64,7 @@ public class ClienteAulaStreaming
                 .setFacultad(facultad)
                 .setAula(aula)
                 .setNombre("Runa_"+ i)
-                .build();
+                .build(); 
 
             request.onNext(registro);
         }

@@ -11,9 +11,7 @@ public class ClienteAula
     static int cantidadRegistrada = 0;
 
     public static void main( String[] args ) throws Exception
-    {
-
-      
+    {      
         // Channel es la abstraccion para connectarse al endpoint del servidor
         final ManagedChannel channel = ManagedChannelBuilder
           .forTarget("localhost:8080")
@@ -25,7 +23,7 @@ public class ClienteAula
           .newBlockingStub(channel);
 
         // Marca de tiempo inicial
-        Instant start = Instant.now();
+        Instant start = Instant.now(); 
 
         // Se itera sobre los x alumnos
         for (int i = 0; i < 200; ++i) {
@@ -41,7 +39,8 @@ public class ClienteAula
             RegistroServiceOuterClass.RegistroResponse response = 
               stub.registro(request);
 
-            // Incrementa la cantidad registrada
+            // Incrementa la cantidad en base al response
+            // Comentar esto para medir performance
             cantidadRegistrada += response.getCantidadRegistrada();
 
         }
@@ -54,7 +53,6 @@ public class ClienteAula
 
         // El Channel debe ser dado de baja antes de terminar el proceso
         channel.shutdownNow();
-
 
         // Calcula que imprime tiempo total
         Duration timeElapsed = Duration.between(start, end);
